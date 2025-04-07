@@ -21,9 +21,12 @@ namespace MauiAppTempoAgora.Services
             string lang = "pt";
             string url = $"https://api.openweathermap.org/data/2.5/weather?" +
                          $"q={cidade}&units=metric&lang={lang}&appid={chave}";
+            
 
+            
             using (HttpClient client = new HttpClient())
             {
+                
                 HttpResponseMessage resp = await client.GetAsync(url);
 
                 string statusCod = resp.StatusCode.ToString();
@@ -52,15 +55,12 @@ namespace MauiAppTempoAgora.Services
                         temp_min = (double?)rascunho["main"]["temp_min"],
                         temp_max = (double?)rascunho["main"]["temp_max"],
                         speed = (double?)rascunho["wind"]["speed"],
-                        visibility = (int?)rascunho["visibility"],
+                        visibility = (double?)rascunho["visibility"]/1000,
                         sunrise = sunrise.ToString(),
                         sunset = sunset.ToString(),
                     }; //Fecha obj. do Tempo.
                 } // Fecha if se os status do servidor foi de sucesso
             } // Fecha laço using
-
-
-
             return t;
         }
     }

@@ -19,9 +19,10 @@ namespace MauiAppTempoAgora
                 if(!string.IsNullOrEmpty(txt_cidade.Text))
                 {
                     Tempo? t = await DataService.GetPrevisao(txt_cidade.Text);
-                   
+                    
                     if (t != null)
                     {
+                        
                         string dados_previsao = "";
                         dados_previsao = $"Latitude: {t.lat} \n" +
                                          $"Longitude: {t.lon} \n" +
@@ -31,7 +32,7 @@ namespace MauiAppTempoAgora
                                          $"Temp Min: {t.temp_min} \n" +
                                          $"Clima: {t.description} \n" +
                                          $"Velocidade do Vento: {t.speed}m/s \n" +
-                                         $"Visibilidade: {t.visibility} metros vísiveis \n";
+                                         $"Visibilidade: {t.visibility}km \n";
 
                         lbl_res.Text = dados_previsao;
                     } else
@@ -42,7 +43,11 @@ namespace MauiAppTempoAgora
                 {
                     lbl_res.Text = "Preencha a cidade.";
                 }
-            } 
+            }
+            catch (HttpRequestException ex)
+            {
+                await DisplayAlert("Sem Conexão", "Não foi possível estabelecer uma conexão com a internet.", "OK");
+            }
             catch (Exception ex)
             {
                 if (ex.Message == "NotFound")
@@ -51,8 +56,10 @@ namespace MauiAppTempoAgora
                 } else
                 {
                     await DisplayAlert("Ops", ex.Message, "Ok");
+                    
                 }
             }
+            
         }
     }
 
